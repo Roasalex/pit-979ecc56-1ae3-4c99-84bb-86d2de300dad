@@ -1,0 +1,13 @@
+# Media stays local: too big for git, and raw footage is private.
+raw-footage/*
+references/*
+exports/*
+music/*
+work/
+!*/.gitkeep
+!references/README.md
+!music/README.md
+
+tools/
+node_modules/
+.DS_Store

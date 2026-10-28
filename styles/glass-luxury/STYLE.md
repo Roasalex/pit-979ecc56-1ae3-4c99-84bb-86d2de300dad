@@ -1,7 +1,9 @@
-# Daisy Rodriguez, Luxury Real Estate: brand sheet
+# Style reference: "glass-luxury"
 
-**Status: draft, waiting on approval.** Measured from one reel ("stop Googling your interest rate"),
-Oct 2026. Theme code: `theme.tsx`. Sample frames: composition `BrandSamples-Daisy`.
+**Not a brand.** A reel the creator likes (Daisy Rodriguez, Luxury Real Estate, "stop Googling your interest
+rate"), measured Oct 2026, kept as an editing style to copy. Borrow the pacing, caption treatment and motifs;
+never her name, daisy mark or CTA. Colours below are hers: swap in the creator's brand colours from
+`brand/<brand>/BRAND.md`. Theme code: `theme.tsx`.
 
 Who: luxury real estate agent; content explains buying and financing in plain language. Voice: warm,
 confident, a bit playful. Mark: a white daisy with a gold centre.
@@ -42,13 +44,7 @@ Low on the frame (~y1415 on her walking framing), short phrases.
 - Falling daisies / pink lilies transition into the end card.
 - Pacing: a cut or graphic change every ~1.2s.
 
-## CTA and end card
+## CTA and end card (their pattern; use the creator's own CTA and logo)
 
 `DM me "RATE"` gold pill (keyword changes per video). End card: green ground, daisy, "Daisy *Rodriguez*",
 `LUXURY REAL ESTATE` in spaced gold caps, pill.
-
-## Needed
-
-- Logo / daisy mark as SVG if one exists (samples use a drawn daisy)
-- Real font names if they differ
-- Music: not measured yet; put her beds in `public/music pack/`

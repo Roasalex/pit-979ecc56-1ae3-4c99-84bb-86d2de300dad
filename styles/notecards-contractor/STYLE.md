@@ -1,7 +1,9 @@
-# Bull & Built: brand sheet
+# Style reference: "notecards-contractor"
 
-**Status: draft, waiting on approval.** Measured from two of their reels ("Contractors, not on Google Maps?"
-and "If you're a contractor"), Oct 2026. Theme code: `theme.tsx`. Sample frames: composition `BrandSamples-BullAndBuilt`.
+**Not a brand.** A reel the creator likes (Bull & Built, "Contractors, not on Google Maps?" and "If you're a
+contractor"), measured Oct 2026, kept as an editing style to copy. Borrow the pacing, caption treatment, layouts
+and motifs; never the Bull & Built name, logo, tagline, URL or CTA. Colours below are theirs: swap in the
+creator's brand colours from `brand/<brand>/BRAND.md`. Theme code: `theme.tsx`.
 
 Who: helps contractors (concrete, striping, sealcoating, landscaping, welding) show up on Google and get
 leads. Voice: plain-spoken, from the job site, "real tips you can use today". Tagline: *Be the Bull. Lead the Market.*
@@ -51,13 +53,7 @@ chest (~y1215 on the office framing). This deliberately differs from the skill's
 - Floating 3D phone/site mockups of client sites ("look like the TOP CREW online").
 - Pacing: a cut, card or graphic change every ~1.1 to 1.7s.
 
-## CTA and end card
+## CTA and end card (their pattern; use the creator's own CTA and logo)
 
 `Comment "SITE"` (yellow sticky, Kalam) / "Free Google profile check". End card on cream: logo, wordmark,
 tagline, red `BULLANDBUILT.COM` tag, sticky CTA.
-
-## Needed
-
-- Logo as SVG or a large transparent PNG (end card shows a placeholder until then)
-- Real font names if they differ from the matches above
-- Music: not measured yet; put their beds in `public/music pack/`

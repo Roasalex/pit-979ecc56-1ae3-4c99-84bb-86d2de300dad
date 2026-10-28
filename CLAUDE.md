@@ -13,8 +13,9 @@ to this project.
 | `public/screen-recordings/` | Screen captures (always muted in the edit) |
 | `public/images/` | Stills, screenshots, logos |
 | `public/sound pack/`, `public/music pack/` | The creator's sound effects and music. Use the original files; trim and level in code |
-| `brand/<client>/BRAND.md` + `theme.tsx` | One brand sheet and theme per client (this workspace edits for several brands). Where the skill says `brand/BRAND.md`, use the sheet of the brand the video is for; ask if it isn't obvious. No sheet for that brand yet: offer to set one up first (skill: `references/brand-sheet.md`) |
-| `src/brand-samples/` | Sample-frame compositions (`BrandSamples-<Brand>`) for approving a brand sheet |
+| `brand/<brand>/BRAND.md` + `theme.tsx` | The creator's own brand sheet(s) (Elevate first). Where the skill says `brand/BRAND.md`, use this. None yet: offer to set one up before the first edit (skill: `references/brand-sheet.md`) |
+| `styles/<style>/STYLE.md` + `theme.tsx` | **Editing styles the creator wants copied**, measured from reels they like (not their brand). Borrow pacing, caption treatment, layouts and motifs; recolour in the creator's brand; never reuse the other creator's name, logo, tagline or CTA |
+| `src/style-samples/` | Sample-frame compositions (`StyleSamples-<Style>`) |
 | `src/<video>/` | One folder + one composition per video, registered in `src/Root.tsx` |
 | `hyperframes/` | One HyperFrames project per asset (skill: `references/hyperframes-hybrid.md`) |
 | `out/` | Finished mp4s and storyboard pages only |
@@ -45,6 +46,8 @@ node scripts/transcribe.mjs public/recordings/<video>.mp4
 ## Rules
 
 - A brand sheet marked **draft** isn't approved: show its sample frames and get a yes before using it in an edit.
+- The skill says never borrow another creator's look. Here the creator *asked* for the styles in `styles/`: copy
+  their editing patterns, but the identity (colours, logo, name, CTA) is always the creator's own.
 
 - Never modify or delete the creator's original takes or audio files.
 - Graphics only state what's said in the video or written in the brand sheet. No invented stats or claims.

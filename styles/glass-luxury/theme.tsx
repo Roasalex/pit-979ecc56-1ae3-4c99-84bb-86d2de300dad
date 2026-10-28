@@ -1,4 +1,4 @@
-// Daisy Rodriguez (Luxury Real Estate) theme: palette, type and recurring pieces measured off her reel (Oct 2026).
+// Style reference "glass-luxury" (from a Daisy Rodriguez reel the creator likes, Oct 2026): pieces to reuse, recoloured in the creator's own brand.
 // Fonts (self-hosted, brand/fonts.ts) are best visual matches from a 360px wide export; swap in the real files if the brand has them.
 import React from "react";
 import { AbsoluteFill } from "remotion";

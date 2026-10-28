@@ -1,4 +1,4 @@
-// Bull & Built theme: palette, type and the recurring pieces measured off their reels (Oct 2026).
+// Style reference "notecards-contractor" (from a Bull & Built reel the creator likes, Oct 2026): pieces to reuse, recoloured in the creator's own brand.
 // Fonts (self-hosted, brand/fonts.ts) are best visual matches from 360-536px wide exports; swap in the real files if the brand has them.
 import React from "react";
 import { AbsoluteFill } from "remotion";

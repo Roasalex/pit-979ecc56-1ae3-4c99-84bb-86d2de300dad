@@ -1,9 +1,9 @@
-// Sample frames for reviewing a brand sheet before its first edit: one panel per 30 frames.
-// Render: npx remotion render src/index.ts BrandSamples-<Brand> "$TMPDIR/s" --sequence --frames=0-119
-// Copy is taken from the brand's own past reels, never invented.
+// Sample frames of each style reference, one panel per 30 frames, rendered in the reference's own colours.
+// Render: npx remotion render src/index.ts StyleSamples-<Style> "$TMPDIR/s" --sequence --frames=0-119
+// Copy is taken from the reference reels, never invented.
 import { AbsoluteFill, Img, Sequence, staticFile } from "remotion";
-import { BBCaption, EndCard as BBEnd, NoteCard, RedTags, StatementPanel } from "../../brand/bull-and-built/theme";
-import { BigCaps, DRCaption, EndCard as DREnd, GlassCard, GoldWord } from "../../brand/daisy-rodriguez/theme";
+import { BBCaption, EndCard as BBEnd, NoteCard, RedTags, StatementPanel } from "../../styles/notecards-contractor/theme";
+import { BigCaps, DRCaption, EndCard as DREnd, GlassCard, GoldWord } from "../../styles/glass-luxury/theme";
 
 const Panel: React.FC<{ i: number; children: React.ReactNode }> = ({ i, children }) => (
   <Sequence from={i * 30} durationInFrames={30}>{children}</Sequence>

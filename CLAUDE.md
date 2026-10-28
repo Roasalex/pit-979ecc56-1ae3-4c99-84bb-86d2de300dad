@@ -1,73 +1,50 @@
 # AI Video Editor
 
-You are the video editor for this workspace. You turn raw talking-head footage into short-form vertical
-videos (Instagram Reels, TikTok, YouTube Shorts) using FFmpeg, whisper.cpp and Remotion.
+Vertical short-form reels (1080x1920 @ 30fps) built in code with Remotion, ffmpeg, whisper.cpp and
+(for a few special looks) HyperFrames. **The workflow lives in the `remotion-reel` skill**
+(`.claude/skills/remotion-reel/SKILL.md`): follow it for every edit. This file only adds what's specific
+to this project.
 
-## Folders
+## Layout
 
-| Folder | What's in it |
+| Path | What |
 |---|---|
-| `raw-footage/` | Untouched clips from the phone/camera. Never modify or delete these. |
-| `references/` | Videos, screenshots and notes showing the editing style to copy. `scripts/study_reference.sh` drops breakdowns here. |
-| `brand/` | `brand-sheet.md` (voice, style rules) and `brand.json` (colors, fonts, caption style the renderer reads). |
-| `music/` | Licensed music beds. Only use tracks from here. |
-| `work/<project>/` | Intermediate files for one edit: `cut.mp4`, `captions.json`, `plan.json`, `storyboard/`. |
-| `exports/` | Final MP4s only. |
-| `remotion/` | The Remotion project that renders captions, motion graphics, zooms and music over the cut. |
+| `public/recordings/` | Talking-head takes as filmed, plus the cut take (`<name>.mp4`), `<name>.cuts.json` and `<name>.words.json` |
+| `public/screen-recordings/` | Screen captures (always muted in the edit) |
+| `public/images/` | Stills, screenshots, logos |
+| `public/sound pack/`, `public/music pack/` | The creator's sound effects and music. Use the original files; trim and level in code |
+| `brand/BRAND.md` | The brand sheet. If it doesn't exist, offer to set it up before the first edit (skill: `references/brand-sheet.md`) |
+| `src/<video>/` | One folder + one composition per video, registered in `src/Root.tsx` |
+| `hyperframes/` | One HyperFrames project per asset (skill: `references/hyperframes-hybrid.md`) |
+| `out/` | Finished mp4s and storyboard pages only |
+| `bin/whisper.cpp/` | Built whisper.cpp with `models/ggml-base.en.bin` and `models/ggml-small.bin` |
 
-## Pipeline
+## Step 0: cut the dead air (before the skill's ingest)
 
-Run from the repo root. `<p>` is the project name (defaults to the raw file's name without extension).
+The skill assumes a take that's already cut. Ours aren't: the creator films with pauses and retakes and
+expects every gap longer than 0.1s gone. So before the skill's step 1:
 
-1. **Read the brief.** Read `brand/brand-sheet.md`, `brand/brand.json`, and everything in `references/`
-   (look at `contact.jpg`, `cuts.txt` and `captions.json` for each reference; view any images). Note the
-   pacing (cuts per second), caption style, graphic style and hook format you're copying.
-2. **Cut pauses.** `python3 scripts/cut_silences.py raw-footage/<file> --min-silence <s>`
-   Use the threshold the user asked for; otherwise 0.3s. Run with `--dry-run` first on long clips and
-   report how much will be removed. If the result looks choppy or clips words, raise `--pad` or `--noise`.
-   Also remove obvious flubs/restarts: find them in the transcript (step 3) and re-cut with ffmpeg.
-3. **Transcribe.** `scripts/transcribe.sh work/<p>/cut.mp4` writes `work/<p>/captions.json`.
-   Read it, fix misheard words, brand names and jargon by editing the JSON (keep the timings).
-4. **Plan the edit.** Write `work/<p>/plan.json` (schema below). Hook graphic in the first 0–2.5s,
-   a punch-in zoom every few seconds on emphasis words, a callout for the key number/claim,
-   a lower third or CTA near the end. Don't stack more than one text graphic at a time; captions are
-   always on. Pick music from `music/` that matches the brand sheet; keep `musicVolume` 0.06–0.15.
-5. **Storyboard for approval.** `cd remotion && node render.mjs ../work/<p>/plan.json --storyboard`
-   Then show the user `work/<p>/storyboard/storyboard.html` (or the stills) with a short summary:
-   length before/after cutting, the hook, each graphic and when it appears, the music. **Stop and wait
-   for approval.** Apply requested changes to `plan.json`/`captions.json` and re-run the storyboard.
-6. **Export.** `cd remotion && node render.mjs ../work/<p>/plan.json ../exports/<p>.mp4`
-   Verify with ffprobe (1080x1920, h264 + aac, expected duration) and pull 3–4 frames to check visually
-   before telling the user it's done.
-
-## plan.json
-
-Paths are relative to the repo root. Times are milliseconds on the **cut** video's timeline.
-
-```json
-{
-  "video": "work/<p>/cut.mp4",
-  "captions": "work/<p>/captions.json",
-  "music": "music/<track>.mp3",
-  "musicVolume": 0.1,
-  "overlays": [
-    { "type": "hook", "startMs": 0, "endMs": 2200, "text": "Your leads are going cold" },
-    { "type": "zoom", "startMs": 1300, "endMs": 2400, "scale": 1.2 },
-    { "type": "callout", "startMs": 2600, "endMs": 4000, "text": "Reply in < 5 min", "position": "top" },
-    { "type": "broll", "startMs": 6000, "endMs": 8000, "src": "references/<clip>.mp4" },
-    { "type": "lowerThird", "startMs": 9000, "endMs": 11000, "text": "Alex", "subtext": "Elevate Marketing" }
-  ]
-}
+```bash
+python3 scripts/cut_silences.py public/recordings/<take1> [<take2> ...] --name <video> --dry-run   # report first
+python3 scripts/cut_silences.py public/recordings/<take1> [<take2> ...] --name <video>
+node scripts/transcribe.mjs public/recordings/<video>.mp4
 ```
 
-To add a new graphic type: add it to the `Overlay` union in `remotion/src/types.ts`, build the component in
-`remotion/src/Overlays.tsx`, render it in `remotion/src/Reel.tsx`, and run `npm run typecheck` in `remotion/`.
-Preview interactively with `npm run studio` in `remotion/`.
+- This also does the skill's ingest: H.264, 30fps, iPhone HDR tone-mapped to SDR, resolution kept
+  (4K stays 4K so punch-ins stay sharp). Several takes are joined in the order given.
+- `--min-silence 0.1` is the default. If the result feels breathless or clips word endings, raise
+  `--pad` (0.08) or `--min-silence` (0.2) and say so; if it leaves pauses in, the room is noisy: try `--noise -30dB`.
+- `<video>.cuts.json` → `joinFrames` lists every jump cut on the new timeline. Use them as the take's
+  cuts in the skill's step 3 (scene detection misses jump cuts on the same framing), and punch in on them.
+- Retakes: read the transcript for repeated sentences or false starts, tell the creator which ones you'd
+  remove, and cut them out of the cut take with ffmpeg before anchoring anything to words.
+  Removing anything after transcription means re-transcribing (the skill: never re-transcribe an
+  unchanged file; this file *has* changed).
 
 ## Rules
 
-- Never touch `raw-footage/`. Never put anything but finished videos in `exports/`.
-- Never invent claims, stats or offers in graphics. Only use what's said in the video or the brand sheet.
-- Only use music from `music/` (licensed). Don't pull music from downloaded references.
-- Downloaded references are for studying style, never for reuse in an export.
-- Always show the storyboard and wait for a yes before the final export, unless the user says to skip it.
+- Never modify or delete the creator's original takes or audio files.
+- Graphics only state what's said in the video or written in the brand sheet. No invented stats or claims.
+- Storyboard review before the final render unless the creator says to skip it (skill: `references/storyboard.md`).
+- Tools: `bin/whisper.cpp/build/bin/whisper-cli`; HyperFrames is pinned in `package.json`, so `npx hyperframes`
+  runs the local copy. Telemetry stays off and never run `hyperframes feedback` or `publish`.

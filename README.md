@@ -1,40 +1,36 @@
 # AI Video Editor
 
-A workspace that turns Claude Code into a short-form video editor: drop raw footage in, get a captioned,
-branded, motion-graphics reel out. Based on the "Claude x Remotion" workflow
-(folders: raw footage / references / exports, tools: Remotion, HyperFrames, FFmpeg, Whisper, yt-dlp).
+Claude Code as a short-form video editor, following the "Claude x Remotion" guide: you film, drop clips
+into `public/recordings/`, describe the edit, review a storyboard, and get an mp4 in `out/`.
 
-## One-time setup (on your Mac)
+## Setup (once, on the Mac you edit on)
 
 ```bash
 git clone <this repo> ai-video-editor && cd ai-video-editor
-scripts/setup.sh        # installs FFmpeg, whisper.cpp + model (~1.6 GB), yt-dlp, Remotion, and tests each
-scripts/selftest.sh     # renders a dummy reel end to end to prove the pipeline works
+scripts/setup.sh
 ```
 
-Then fill in `brand/brand-sheet.md` and the colors/font in `brand/brand.json`, add a few reels you like to
-`references/` (`scripts/study_reference.sh <url>`), and put licensed music in `music/`.
+This installs ffmpeg, builds whisper.cpp into `bin/whisper.cpp` (base.en + small models), installs the
+Remotion project and HyperFrames, and checks that Google Chrome is installed. Open Claude Code in this folder
+and the `remotion-reel` skill loads automatically from `.claude/skills/`. (In the Claude app, upload the
+original `remotion-reel.zip` under Customize → Skills instead.)
 
-## Editing a video
+Then, before the first edit:
+1. **Brand sheet:** "Set up my brand sheet. Pull the colours and fonts from my website <url>." → `brand/BRAND.md`
+2. **Sounds and music:** `.mp3` sound effects into `public/sound pack/` and music into `public/music pack/`,
+   named by what they sound like (`woosh.mp3`, `pop.mp3`, `riser.mp3`). Use only audio you have the rights to.
 
-Put the clip in `raw-footage/`, open Claude Code in this folder, and say:
+## Editing
 
-> Edit my new video into an Instagram Reel: `take1.mov` in my raw footage folder.
-> 1. Cut every pause longer than 0.3 seconds.
-> 2. Follow my brand sheet.
-> 3. Add captions, music and motion graphics.
-> 4. Use anything in my references folder.
->
-> Show me a storyboard to review first, then export it to my exports folder.
+> Edit these clips into one reel. Cut the dead air, add my captions, and plan motion graphics for each
+> beat in my brand. Lay it out in a storyboard for me to review.
 
-(or just `/edit-reel take1.mov`). Claude follows `CLAUDE.md`: cut pauses → transcribe → plan graphics →
-storyboard for your approval → render to `exports/`.
+Film tips: leave room above your head for titles, film in 4K if you can, say the key words clearly,
+and don't worry about pauses or retakes.
 
-## What's where
+## What's here
 
-- `scripts/cut_silences.py` – FFmpeg silence detection + cut (`--min-silence`, `--noise`, `--pad`)
-- `scripts/transcribe.sh` – whisper.cpp word-level timestamps → `captions.json`
-- `scripts/study_reference.sh` – yt-dlp download + contact sheet + cut timing + transcript of a reference
-- `remotion/` – the reel template: animated word-by-word captions, hook title, callouts, lower thirds,
-  punch-in zooms, b-roll, music, progress bar. `node render.mjs plan.json [--storyboard]`
-- `brand/` – brand sheet (for Claude) + `brand.json` (for the renderer)
+- `.claude/skills/remotion-reel/`: the editing skill from the guide (workflow, references, measuring scripts, components)
+- `scripts/cut_silences.py`: cuts gaps over 0.1s, joins several takes, converts iPhone HDR, outputs jump-cut frames
+- `scripts/transcribe.mjs`: whisper.cpp → `[{ text, startMs, endMs }]`
+- `CLAUDE.md`: project layout and the dead-air step the skill doesn't cover

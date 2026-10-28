@@ -1,13 +1,17 @@
-# Media stays local: too big for git, and raw footage is private.
-raw-footage/*
-references/*
-exports/*
-music/*
-work/
-!*/.gitkeep
-!references/README.md
-!music/README.md
-
-tools/
-node_modules/
+node_modules
+dist
+build
 .DS_Store
+.env
+
+# Media stays on the editing machine: too big for git, and it's the creator's footage.
+public/**/*
+!public/**/
+!public/**/.gitkeep
+out/*
+!out/.gitkeep
+hyperframes/*
+!hyperframes/.gitkeep
+
+# Cloned and built by scripts/setup.sh
+bin/

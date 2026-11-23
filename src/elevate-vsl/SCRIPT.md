@@ -40,3 +40,24 @@ Visuals: the creator's cartoon avatar scenes (`public/images/elevate-vsl/scene-1
 - Case: a tint shop in Aurora: 679 leads from ~$6,400 in ads, ~$9.50 a lead (6,400 / 679 = $9.43, so "around $9.50" holds)
 - Leads $900/mo + $600 setup, month to month · Growth Partner $600/mo + a share of jobs · Full Service from $3,000/mo
 - 15-minute call · CTA: book below
+
+## Voice-over status (2026-11-23)
+
+Takes mapped by transcript: §1 take-4 · §2 take-5 · §3 take-6 · §4 take-7 · §5 take-8 · §6 take-9 · §7 take-10 ·
+§8 take-12 · **§9 missing** · §10 take-13 · §11 take-14. Joined in script order with
+`scripts/cut_silences.py ... --name elevate-vsl-cut` (246.7s → 170.4s: dead air over 0.1s removed, 0.4s breath
+between sections, levelled to -16 LUFS), then `public/recordings/elevate-vsl-edit.m4a` = the cut minus the stumble
+("500, 500 bucks") and the retake (first "Someone fills out the form at 11"), boundaries set on loudness dips
+(see `elevate-vsl-edit.removed.json`). 166.4s. Transcript: `elevate-vsl-edit.words.json` (small model).
+
+Said differently from the script (creator to decide; not fixable in the edit):
+- §4 "**I** don't touch any of it" (script: "You") · "the second one fills out the form, **you** get a text" (script: "they")
+- §10 "Full Service **for** $3,000" (script: "from") · §1 "If you **want** a local service business" (script: "own"; may be a mishear)
+- Caption fixes (model mishears, audio is right): "tint" (heard "10"/"tenant"), "film" (heard "phone"), "spend",
+  "booked jobs", "setup", "Meta"
+
+## Proof check
+
+§9 (679 leads from ~$6,400, ~$9.50 a lead) is not on elevate-mk-tg.com. The site's published Precision Tintz numbers are
+75 booked jobs in 60 days at $7 per booked appointment. Both can be true (different periods/metrics); the ad should
+use whichever the creator can back up with the ad account, and §7 says booked jobs are what counts.

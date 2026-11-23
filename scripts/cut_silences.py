@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Cut the dead air out of one or more talking-head takes and join them into one edit-ready take.
+"""Cut the dead air out of one or more talking-head takes (or audio-only voice-over takes) and join them into one
+edit-ready take.
 
     python3 scripts/cut_silences.py public/recordings/IMG_0412.MOV public/recordings/IMG_0413.MOV --name tools-video
 
@@ -31,9 +32,11 @@ def probe(path):
         capture_output=True, text=True, check=True,
     )
     info = json.loads(out.stdout)
-    v = next(s for s in info["streams"] if s["codec_type"] == "video")
     if not any(s["codec_type"] == "audio" for s in info["streams"]):
         sys.exit(f"{path.name} has no audio track; can't detect pauses.")
+    v = next((s for s in info["streams"] if s["codec_type"] == "video"), None)
+    if v is None:  # voice-over recording: audio only
+        return {"duration": float(info["format"]["duration"]), "width": 0, "height": 0, "hdr": False, "audio_only": True}
     w, h = int(v["width"]), int(v["height"])
     rotation = int(float(v.get("tags", {}).get("rotate", 0)))
     for sd in v.get("side_data_list", []):
@@ -41,7 +44,7 @@ def probe(path):
     if abs(rotation) % 180 == 90:  # phones store portrait as rotated landscape
         w, h = h, w
     return {"duration": float(info["format"]["duration"]), "width": w, "height": h,
-            "hdr": v.get("color_transfer") in HDR_TRANSFERS}
+            "hdr": v.get("color_transfer") in HDR_TRANSFERS, "audio_only": False}
 
 
 def detect_silences(path, noise, min_silence):
@@ -68,6 +71,30 @@ def keep_ranges(silences, total, pad, min_keep):
     if total - cursor >= min_keep:
         ranges.append((cursor, total))
     return ranges
+
+
+def render_audio(clips, out, script_path, take_gap):
+    """Voice-over takes: cut and join the audio only, levelled to a steady -16 LUFS for the edit.
+    `take_gap` seconds of silence go between takes, so one section doesn't run straight into the next."""
+    parts, labels, n = [], [], 0
+    for i, clip in enumerate(clips):
+        if i > 0 and take_gap > 0:
+            parts.append(f"aevalsrc=0|0:s=48000:d={take_gap:.3f},aformat=channel_layouts=stereo[a{n}];")
+            labels.append(f"[a{n}]")
+            n += 1
+        for a, b in clip["ranges"]:
+            parts.append(f"[{i}:a]atrim=start={a:.3f}:end={b:.3f},asetpts=PTS-STARTPTS,"
+                         f"aresample=48000,aformat=channel_layouts=stereo[a{n}];")
+            labels.append(f"[a{n}]")
+            n += 1
+    parts.append(f"{''.join(labels)}concat=n={n}:v=0:a=1,loudnorm=I=-16:TP=-1.5:LRA=11[a]")
+    script_path.write_text("\n".join(parts))
+    cmd = ["ffmpeg", "-hide_banner", "-y", "-loglevel", "error"]
+    for clip in clips:
+        cmd += ["-i", str(clip["path"])]
+    cmd += ["-filter_complex_script", str(script_path), "-map", "[a]", "-ar", "48000",
+            "-c:a", "aac", "-b:a", "192k", str(out)]
+    subprocess.run(cmd, check=True)
 
 
 def render(clips, size, out, script_path):
@@ -102,6 +129,8 @@ def main():
     p.add_argument("--noise", default="-35dB", help="silence threshold (default -35dB; try -30dB in a noisy room)")
     p.add_argument("--pad", type=float, default=0.05, help="seconds of pause kept each side of a cut (default 0.05)")
     p.add_argument("--min-keep", type=float, default=0.15, help="drop kept fragments shorter than this (breaths, clicks)")
+    p.add_argument("--take-gap", type=float, default=0.4,
+                   help="seconds of silence between takes in an audio-only join (default 0.4: a breath between sections)")
     p.add_argument("--dry-run", action="store_true", help="report what would be cut without rendering")
     args = p.parse_args()
 
@@ -119,7 +148,12 @@ def main():
 
     # Joins on the new timeline, in frames. Each is a jump cut (or a new take).
     joins, t = [], 0.0
-    for clip in clips:
+    gap = args.take_gap if all(c["audio_only"] for c in clips) else 0.0
+    takes = []
+    for ci, clip in enumerate(clips):
+        if ci > 0:
+            t += gap
+        takes.append({"source": clip["path"].name, "startFrame": round(t * FPS)})
         for a, b in clip["ranges"]:
             if t > 0:
                 joins.append(round(t * FPS))
@@ -128,18 +162,27 @@ def main():
     print(f"Total: {total:.1f}s -> {t:.1f}s, {len(joins)} jump cuts")
 
     name = args.name or Path(args.inputs[0]).stem + "-cut"
-    out = ROOT / "public" / "recordings" / f"{name}.mp4"
+    audio_only = all(c["audio_only"] for c in clips)
+    if any(c["audio_only"] for c in clips) and not audio_only:
+        sys.exit("Mix of video takes and audio-only takes: cut them separately.")
+    out = ROOT / "public" / "recordings" / f"{name}.{'m4a' if audio_only else 'mp4'}"
     (out.parent / f"{name}.cuts.json").write_text(json.dumps({
         "settings": {k: getattr(args, k) for k in ("min_silence", "noise", "pad", "min_keep")},
         "fps": FPS,
         "sourceSeconds": round(total, 3),
         "editSeconds": round(t, 3),
         "joinFrames": joins,
+        "takeStartFrames": takes,
         "clips": [{"source": str(c["path"].relative_to(ROOT)) if c["path"].is_relative_to(ROOT) else str(c["path"]),
                    "hdr": c["hdr"],
                    "kept": [{"start": round(a, 3), "end": round(b, 3)} for a, b in c["ranges"]]} for c in clips],
     }, indent=2))
     if args.dry_run:
+        return
+    if audio_only:
+        render_audio(clips, out, out.parent / f".{name}.filter.txt", args.take_gap)
+        (out.parent / f".{name}.filter.txt").unlink()
+        print(f"Wrote {out.relative_to(ROOT)} (audio only, levelled to -16 LUFS)")
         return
     size = (clips[0]["width"], clips[0]["height"])
     render(clips, size, out, out.parent / f".{name}.filter.txt")

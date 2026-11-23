@@ -13,6 +13,7 @@ import { AssembleTextSample } from "./style-samples/AssembleTextSample";
 import { WorksWheelSample } from "./style-samples/WorksWheelSample";
 import { ReviewWallSample } from "./style-samples/ReviewWallSample";
 import { SegmentMeterSample } from "./style-samples/SegmentMeterSample";
+import { ElevateSamples } from "./style-samples/ElevateSamples";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="WorksWheelSample" component={WorksWheelSample} durationInFrames={240} fps={30} width={1080} height={1920} />
       <Composition id="ReviewWallSample" component={ReviewWallSample} durationInFrames={150} fps={30} width={1080} height={1920} />
       <Composition id="SegmentMeterSample" component={SegmentMeterSample} durationInFrames={90} fps={30} width={1080} height={1920} />
+      <Composition id="BrandSamples-Elevate" component={ElevateSamples} durationInFrames={90} fps={30} width={1080} height={1920} />
     </>
   );
 };

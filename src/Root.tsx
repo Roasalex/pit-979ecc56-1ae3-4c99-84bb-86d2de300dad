@@ -8,6 +8,7 @@ import { QuoteFrameSample } from "./style-samples/QuoteFrameSample";
 import { OrbitSample } from "./style-samples/OrbitSample";
 import { HairlineSample } from "./style-samples/HairlineSample";
 import { DataFlowSample } from "./style-samples/DataFlowSample";
+import { StatCountSample } from "./style-samples/StatCountSample";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="OrbitSample" component={OrbitSample} durationInFrames={150} fps={30} width={1080} height={1920} />
       <Composition id="HairlineSample" component={HairlineSample} durationInFrames={240} fps={30} width={1080} height={1920} />
       <Composition id="DataFlowSample" component={DataFlowSample} durationInFrames={180} fps={30} width={1080} height={1920} />
+      <Composition id="StatCountSample" component={StatCountSample} durationInFrames={120} fps={30} width={1080} height={1920} />
     </>
   );
 };

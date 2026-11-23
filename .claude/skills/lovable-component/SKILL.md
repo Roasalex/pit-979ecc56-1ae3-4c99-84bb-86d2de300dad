@@ -35,6 +35,10 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Props that don't do what they say (a spring "duration" that takes 11s): watch the animation finish in a browser
+     at the times it claims, and test edge values (decimals, counting down, long labels).
+   - Text that only exists after JavaScript, or is split into animated pieces ("001234567890"): put the real text in
+     the HTML (`sr-only`) and mark the animated copy `aria-hidden`. Check what a server render outputs.
    - Theme colours that vanish on one theme (`text-muted` lines on a light site): look at it on the site's actual
      theme, and on light and dark if the site has both.
    - Fixed SVG ids (`id="cpu-mask-1"`, `id="gradient"`): duplicated when used twice. Suffix them with `useId()`.

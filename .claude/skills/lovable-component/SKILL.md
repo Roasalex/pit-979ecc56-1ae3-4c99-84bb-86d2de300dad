@@ -35,6 +35,8 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Headings: demos often use `<h1>` for styling (one had four in a single quote). A page keeps exactly one `<h1>`;
+     Elevate's sites carry SEO and schema work, so restyle extra ones as `<span>`/`<p>` and check the page's heading order.
    - Class names with no CSS behind them (e.g. `fan-card`, `fan-layout`: not Tailwind utilities, not in the paste).
      21st.dev pastes sometimes leave out a stylesheet the component depends on, and the component then renders as
      nothing. Grep every non-Tailwind class; write the missing CSS and **look at it in a browser** before sending.

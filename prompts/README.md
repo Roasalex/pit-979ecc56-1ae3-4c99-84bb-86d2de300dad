@@ -20,3 +20,4 @@ reading.
 | (skill) `.claude/skills/lovable-component/` | website, video | 2026-11-23 | Pasted shadcn components → Lovable sites or video graphics; worked example AnimatedRoadmap |
 | `tiger-tear-reveal.md` | website, video | 2026-11-23 | Poster tears open, tiger looks through; video port `src/shared/TigerTear.tsx` |
 | `card-fan-carousel.md` | website, video | 2026-11-23 | Fanned cards; **paste was missing its CSS** (we wrote it); video port `src/shared/CardFan.tsx` |
+| `dot-pattern-1.md` | website, video | 2026-11-23 | Dot texture + framed quote; **demo has 4 `<h1>`s** (fix on sites); video `QuoteFrame` |

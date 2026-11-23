@@ -79,6 +79,12 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
      (`aria-hidden` on the clones) and the server HTML shouldn't multiply it. Check with `locator.ariaSnapshot()`.
    - Shared shadcn files in the paste (`card`, `avatar`, `button`): the project has its own; don't overwrite them.
    - CSS snippets that start with `@import "tailwindcss"`: add only the new rules to `src/styles.css`.
+   - **CSS snippets with a `:root` (or `.dark`) block that sets `--background`, `--primary`... : that replaces the
+     site's whole theme.** Never add it; the component should use the site's existing tokens.
+   - Animations started in effects without cleanup (`requestAnimationFrame`/`setInterval` not cancelled): change a
+     prop mid-animation in the browser and check the final state matches the new value.
+   - Data displays (meters, progress, charts) need a role and value for screen readers (`role="meter"`,
+     `aria-valuenow`), not just visual text.
 4. **Send it to Lovable.** Lovable edits through its own agent: `send_message` with the fixed file contents, the exact
    path (`src/components/ui/<name>.tsx`), the dependency to add (`framer-motion`), where it goes on which page, and
    "don't change anything else". Use `plan_mode: true` first for anything bigger than one section. Each message

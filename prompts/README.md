@@ -28,3 +28,4 @@ reading.
 | `text-scroll-animation.md` | video, website | 2026-11-23 | **Use the fixed `scroll-assemble.tsx`** (pasted one takes over the whole site's scrolling via Lenis); video `AssembleText` |
 | `works-wheel.md` | website, video | 2026-11-23 | **Use the `.fixed` version** (pasted one traps phone visitors: swipes don't scroll the page); video `WorksWheelVideo` |
 | `3d-testimonials.md` | website, video | 2026-11-23 | **Real reviews only** (demo reviews are invented; FTC 2024 rule). Use fixed `testimonials-wall.tsx`; video `ReviewWall` |
+| `energy-meter.md` | video, portal | 2026-11-23 | **Never paste its CSS** (replaces the site's theme). Use `.fixed` (pasted one shows a stale number); video `SegmentMeter` |

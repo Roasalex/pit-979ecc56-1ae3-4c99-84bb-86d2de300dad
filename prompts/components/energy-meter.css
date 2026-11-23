@@ -1,0 +1,16 @@
+/* AS SHARED. DO NOT paste into a client site's src/styles.css: the :root block below REPLACES the site's whole
+   colour theme (background, foreground, card, primary, border, ring) with this dark sci-fi palette, recolouring
+   every page. It also re-imports Tailwind, which the stylesheet already does. The component needs no extra CSS. */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --background: oklch(0.06 0.02 250);
+  --foreground: oklch(0.95 0.02 220);
+  --card: oklch(0.1 0.02 250);
+  --card-foreground: oklch(0.92 0.02 220);
+  --primary: oklch(0.75 0.18 195);
+  --primary-foreground: oklch(0.1 0 0);
+  --border: oklch(0.3 0.1 195);
+  --ring: oklch(0.75 0.18 195);
+}

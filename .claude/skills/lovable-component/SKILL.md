@@ -35,6 +35,8 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Fonts the component names but never loads (e.g. `"Anton"` in a font stack): load them on the site, or pass the
+     site's own display font. Otherwise visitors get a fallback font and the design breaks.
    - File name matches the export (`animated-roadmap.tsx` for `AnimatedRoadmap`).
    - Demo copy is generic SaaS text: rewrite for the client's business **using only facts on their site**. No invented
      stats, guarantees or prices.
@@ -58,4 +60,6 @@ Web components animate on **scroll or hover**; a video has neither. Port, don't 
 - Delays tied to ids → tie them to the frame the spoken word lands on (the remotion-reel skill).
 - Put reusable ports in `src/shared/`, render a sample, and look at the frames before using it in an edit.
 
-Worked example: `references/animated-roadmap.md` (web fix + the video port in `src/shared/AnimatedRoadmap.tsx`).
+Worked examples: `references/animated-roadmap.md` (web fix + the video port in `src/shared/AnimatedRoadmap.tsx`).
+In the video-editor repo, `prompts/` holds every component the creator has shared (e.g. `tiger-tear-reveal.md`, ported to
+`src/shared/TigerTear.tsx` by keeping the drawing code and replacing scroll/pointer/timers with the frame).

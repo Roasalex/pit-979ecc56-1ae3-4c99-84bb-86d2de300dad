@@ -2,6 +2,7 @@ import { Composition } from "remotion";
 import { MyComposition } from "./Composition";
 import { BullAndBuiltSamples, DaisySamples } from "./style-samples/StyleSamples";
 import { RoadmapSample } from "./style-samples/RoadmapSample";
+import { TigerTearSample } from "./style-samples/TigerTearSample";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -10,6 +11,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="StyleSamples-Notecards" component={BullAndBuiltSamples} durationInFrames={120} fps={30} width={1080} height={1920} />
       <Composition id="StyleSamples-GlassLuxury" component={DaisySamples} durationInFrames={120} fps={30} width={1080} height={1920} />
       <Composition id="RoadmapSample" component={RoadmapSample} durationInFrames={120} fps={30} width={1080} height={1920} />
+      <Composition id="TigerTearSample" component={TigerTearSample} durationInFrames={180} fps={30} width={1080} height={1920} />
     </>
   );
 };

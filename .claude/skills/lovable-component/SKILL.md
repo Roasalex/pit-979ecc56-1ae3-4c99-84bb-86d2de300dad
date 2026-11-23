@@ -35,6 +35,9 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Relative imports to files that aren't in the paste (`./x-utils/engine`): it can't build. Read the comments for
+     the source package and check npm (`npm view <pkg>`): installing the real package beats recreating its files.
+     Inspect it first (licence, dependencies, install scripts, network calls) in a scratch folder.
    - Animation driven by React state every frame (`setState` inside `requestAnimationFrame`): re-renders the whole
      component 60x/s forever, even offscreen. Move continuous motion to CSS animations or framer-motion values.
    - `absolute inset-0` backgrounds whose parent isn't `relative`: they paint over the rest of the page. Add `relative isolate`.
@@ -70,6 +73,9 @@ Web components animate on **scroll or hover**; a video has neither. Port, don't 
 - Size for 1080x1920 and the reel safe area (x 90-990, y 285-1635).
 - Delays tied to ids → tie them to the frame the spoken word lands on (the remotion-reel skill).
 - Put reusable ports in `src/shared/`, render a sample, and look at the frames before using it in an edit.
+- If the animation runs on its own engine and browser clock (can't be driven by the frame), record it instead: play it
+  in headless Chromium under Playwright's fake clock and screenshot every 1/30 s (`scripts/capture-hairline.mjs` is the
+  pattern), then use the clip. Thicken thin lines for phone screens.
 
 Worked examples (see `prompts/*.md` in the video-editor repo for each one's measured problems and fixes): `references/animated-roadmap.md` (web fix + the video port in `src/shared/AnimatedRoadmap.tsx`).
 In the video-editor repo, `prompts/` holds every component the creator has shared (e.g. `tiger-tear-reveal.md`, ported to

@@ -29,6 +29,9 @@ done
 say "Python packages for the skill's measuring scripts"
 python3 -c "import numpy, PIL" 2>/dev/null || python3 -m pip install --user numpy pillow
 
+say "Browser for capturing web figures (scripts/capture-hairline.mjs)"
+npx playwright install chromium
+
 say "HyperFrames"
 npx hyperframes telemetry disable >/dev/null 2>&1 || true
 
@@ -43,6 +46,7 @@ check "whisper transcribes"        "bin/whisper.cpp/build/bin/whisper-cli -m bin
 check "TypeScript builds"          "npx tsc --noEmit"
 check "Remotion bundles"           "npx remotion bundle --out-dir \"$(mktemp -d)\" --log=error"
 check "numpy + Pillow"             "python3 -c 'import numpy, PIL'"
+check "Playwright browser"         "node -e \"import('playwright').then(async ({chromium}) => (await chromium.launch()).close())\""
 check "HyperFrames runs"           "npx hyperframes --help"
 if [ $MAC = 1 ]; then
   check "Google Chrome installed"  "test -x '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'"

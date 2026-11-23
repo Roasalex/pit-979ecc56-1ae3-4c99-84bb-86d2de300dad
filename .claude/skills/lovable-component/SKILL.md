@@ -35,6 +35,12 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Animation driven by React state every frame (`setState` inside `requestAnimationFrame`): re-renders the whole
+     component 60x/s forever, even offscreen. Move continuous motion to CSS animations or framer-motion values.
+   - `absolute inset-0` backgrounds whose parent isn't `relative`: they paint over the rest of the page. Add `relative isolate`.
+   - `<main>`/`<header>`/`<footer>` inside a component: the page layout already has them. Use `<section>`/`<div>`.
+   - Fixed pixel sizes inside a box that shrinks on phones: check at 390px that nothing runs off-screen.
+   - Hard-coded demo content with no props (logo lists, sample copy): make it props before it goes on a client site.
    - Headings: demos often use `<h1>` for styling (one had four in a single quote). A page keeps exactly one `<h1>`;
      Elevate's sites carry SEO and schema work, so restyle extra ones as `<span>`/`<p>` and check the page's heading order.
    - Class names with no CSS behind them (e.g. `fan-card`, `fan-layout`: not Tailwind utilities, not in the paste).
@@ -65,6 +71,6 @@ Web components animate on **scroll or hover**; a video has neither. Port, don't 
 - Delays tied to ids → tie them to the frame the spoken word lands on (the remotion-reel skill).
 - Put reusable ports in `src/shared/`, render a sample, and look at the frames before using it in an edit.
 
-Worked examples: `references/animated-roadmap.md` (web fix + the video port in `src/shared/AnimatedRoadmap.tsx`).
+Worked examples (see `prompts/*.md` in the video-editor repo for each one's measured problems and fixes): `references/animated-roadmap.md` (web fix + the video port in `src/shared/AnimatedRoadmap.tsx`).
 In the video-editor repo, `prompts/` holds every component the creator has shared (e.g. `tiger-tear-reveal.md`, ported to
 `src/shared/TigerTear.tsx` by keeping the drawing code and replacing scroll/pointer/timers with the frame).

@@ -5,6 +5,7 @@ import { RoadmapSample } from "./style-samples/RoadmapSample";
 import { TigerTearSample } from "./style-samples/TigerTearSample";
 import { CardFanSample } from "./style-samples/CardFanSample";
 import { QuoteFrameSample } from "./style-samples/QuoteFrameSample";
+import { OrbitSample } from "./style-samples/OrbitSample";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="TigerTearSample" component={TigerTearSample} durationInFrames={180} fps={30} width={1080} height={1920} />
       <Composition id="CardFanSample" component={CardFanSample} durationInFrames={120} fps={30} width={1080} height={1920} />
       <Composition id="QuoteFrameSample" component={QuoteFrameSample} durationInFrames={120} fps={30} width={1080} height={1920} />
+      <Composition id="OrbitSample" component={OrbitSample} durationInFrames={150} fps={30} width={1080} height={1920} />
     </>
   );
 };

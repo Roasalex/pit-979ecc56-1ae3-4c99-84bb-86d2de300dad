@@ -19,3 +19,4 @@ reading.
 | (skill) `.claude/skills/remotion-reel/` | video | 2026-10-28 | The Claude x Remotion editing workflow |
 | (skill) `.claude/skills/lovable-component/` | website, video | 2026-11-23 | Pasted shadcn components → Lovable sites or video graphics; worked example AnimatedRoadmap |
 | `tiger-tear-reveal.md` | website, video | 2026-11-23 | Poster tears open, tiger looks through; video port `src/shared/TigerTear.tsx` |
+| `card-fan-carousel.md` | website, video | 2026-11-23 | Fanned cards; **paste was missing its CSS** (we wrote it); video port `src/shared/CardFan.tsx` |

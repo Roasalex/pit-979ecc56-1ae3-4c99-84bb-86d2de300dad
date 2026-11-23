@@ -35,6 +35,9 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Class names with no CSS behind them (e.g. `fan-card`, `fan-layout`: not Tailwind utilities, not in the paste).
+     21st.dev pastes sometimes leave out a stylesheet the component depends on, and the component then renders as
+     nothing. Grep every non-Tailwind class; write the missing CSS and **look at it in a browser** before sending.
    - Fonts the component names but never loads (e.g. `"Anton"` in a font stack): load them on the site, or pass the
      site's own display font. Otherwise visitors get a fallback font and the design breaks.
    - File name matches the export (`animated-roadmap.tsx` for `AnimatedRoadmap`).

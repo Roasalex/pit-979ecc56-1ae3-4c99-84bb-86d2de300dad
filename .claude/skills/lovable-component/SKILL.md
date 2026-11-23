@@ -35,6 +35,12 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Site-wide side effects from inside a section: smooth-scroll providers (`<ReactLenis root>`), global listeners,
+     `document.body` styles. They change every page. Remove them; a site-wide choice belongs in the layout, and only
+     if the user asks for it.
+   - Absolutely positioned bits (hints, badges) with no positioned parent: they land in the site header. Test the
+     component between a real header and footer, not alone on a blank page.
+   - Text split into letters: keep words together (`whitespace-nowrap` per word) so phones never break mid-word.
    - Props that don't do what they say (a spring "duration" that takes 11s): watch the animation finish in a browser
      at the times it claims, and test edge values (decimals, counting down, long labels).
    - Text that only exists after JavaScript, or is split into animated pieces ("001234567890"): put the real text in

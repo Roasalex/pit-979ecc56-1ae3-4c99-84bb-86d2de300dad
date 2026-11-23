@@ -1,0 +1,39 @@
+/* Missing stylesheet for card-fan-carousel.tsx (written 2026-11-23; the 21st.dev paste ships without it, and
+   without it every card is 0px tall and nothing shows). Heights follow the breakpoints named in the component's
+   getHeightMultiplier (22/26/28/34/38rem, capped at 70vh); the card size is our choice. Add to src/styles.css. */
+.fan-layout {
+  height: min(22rem, 70vh);
+}
+.fan-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9rem;
+  aspect-ratio: 3 / 4;
+  margin-left: -4.5rem;
+  margin-top: -6rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.35);
+  opacity: 0; /* GSAP fades cards in; avoids a flash of the stacked cards before it runs */
+  will-change: transform;
+}
+@media (min-width: 480px) {
+  .fan-layout { height: min(26rem, 70vh); }
+  .fan-card { width: 11rem; margin-left: -5.5rem; margin-top: -7.33rem; }
+}
+@media (min-width: 640px) {
+  .fan-layout { height: min(28rem, 70vh); }
+  .fan-card { width: 12.5rem; margin-left: -6.25rem; margin-top: -8.33rem; }
+}
+@media (min-width: 768px) {
+  .fan-layout { height: min(34rem, 70vh); }
+  .fan-card { width: 15rem; margin-left: -7.5rem; margin-top: -10rem; }
+}
+@media (min-width: 1024px) {
+  .fan-layout { height: min(38rem, 70vh); }
+  .fan-card { width: 17rem; margin-left: -8.5rem; margin-top: -11.33rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fan-card { transition: none; }
+}

@@ -108,6 +108,26 @@ Web components animate on **scroll or hover**; a video has neither. Port, don't 
   in headless Chromium under Playwright's fake clock and screenshot every 1/30 s (`scripts/capture-hairline.mjs` is the
   pattern), then use the clip. Thicken thin lines for phone screens.
 
-Worked examples (see `prompts/*.md` in the video-editor repo for each one's measured problems and fixes): `references/animated-roadmap.md` (web fix + the video port in `src/shared/AnimatedRoadmap.tsx`).
+## Library of checked components
+
+`references/components/` holds the web versions that passed browser testing (fixed where the paste was broken), and
+`references/notes-*.md` the measured problems and fixes for each. Use those files rather than the original paste.
+
+| Component | File to use | Note |
+|---|---|---|
+| Animated roadmap | `animated-roadmap.md` (code inside) | |
+| Tiger tear reveal | `tiger-tear-reveal.tsx` (as shared) | load Anton or pass the site's font |
+| Card fan carousel | `card-fan-carousel.tsx` + **`card-fan-carousel.css`** | paste had no CSS: renders nothing without it |
+| Dot pattern / framed quote | `dot-pattern-1.tsx` | demo has 4 `<h1>`s: use spans |
+| Orbiting items | `orbiting-items.tsx` | replaces orbiting-skills (60 re-renders/s, leaks, clips) |
+| Elevator & 32 more line figures | npm `@lucasmarkes/hairline` | the paste can't build; install the package |
+| Circuit into chip | `cpu-architecture.fixed.tsx` + `.fixed.css` | lines invisible on light sites otherwise |
+| Count up / odometer | `count-up.fixed.tsx` | paste: wrong decimals, late, junk text for Google |
+| Scroll assemble text | `scroll-assemble.tsx` | paste took over the whole site's scrolling |
+| Works wheel (portfolio) | `works-wheel.fixed.tsx` | **paste traps phone visitors** |
+| Testimonials wall | `testimonials-wall.tsx` | **real reviews only** |
+| Segment meter | `energy-meter.fixed.tsx` | **never paste its CSS** (replaces the theme) |
+
+Worked examples (each one's measured problems and fixes are in `references/notes-*.md`): `references/animated-roadmap.md` (web fix + the video port in `src/shared/AnimatedRoadmap.tsx`).
 In the video-editor repo, `prompts/` holds every component the creator has shared (e.g. `tiger-tear-reveal.md`, ported to
 `src/shared/TigerTear.tsx` by keeping the drawing code and replacing scroll/pointer/timers with the frame).

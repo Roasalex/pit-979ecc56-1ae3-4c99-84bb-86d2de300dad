@@ -1,4 +1,5 @@
-// Elevate ad, first cut: the creator's voice-over over his cartoon scenes, captions on his words, and a graphic for
+// Elevate ad, v2: the creator's voice-over over his talking cartoon character on black (two cartoon scenes he liked
+// stay: filming the car, at the desk), captions on his words, and a graphic for
 // each script beat (brand/elevate: black cards, off-white type, one red accent). Every graphic only states what is said.
 // Cues hang off word indices (i) from words.ts, so they move with the words if the transcript is re-timed.
 import React from "react";
@@ -6,6 +7,7 @@ import { AbsoluteFill, Audio, Img, interpolate, spring, staticFile, useCurrentFr
 import { EL, EL_FONT } from "../../brand/elevate/theme";
 import { WORDS, type W } from "./words";
 import { DataFlow } from "../shared/DataFlow";
+import MOUTH from "./mouth.json"; // scripts/mouth_envelope.py on the voice-over: per-frame level + mouth open/shut
 
 const FPS = 30;
 const f = (ms: number) => Math.round((ms / 1000) * FPS);
@@ -86,6 +88,40 @@ const Ink: React.FC = () => (
   <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 38%, #161616, ${EL.ink} 70%)` }} />
 );
 
+
+/** The cartoon character cut out on black. Mouth flaps with the voice (open/closed art pairs), and the body bobs and
+ *  tilts with the voice level so it reads as talking. Bottom edge fades into the black where the art is cropped. */
+type Pose = "closeup" | "standing" | "sitting" | "presenting" | "hands";
+const ART: Record<Pose, { open: string; closed?: string; w: number; h: number }> = {
+  closeup: { open: "closeup-open", closed: "closeup-closed", w: 887, h: 887 },
+  standing: { open: "standing-open", closed: "standing-closed", w: 887, h: 887 },
+  sitting: { open: "sitting-open", closed: "sitting-closed", w: 887, h: 887 },
+  presenting: { open: "presenting", w: 948, h: 1659 },
+  hands: { open: "closeup-hands", w: 1290, h: 1219 },
+};
+const lvl = (fr: number) => (MOUTH.level[Math.max(0, Math.min(MOUTH.level.length - 1, fr))] ?? 0) / 100;
+const Talker: React.FC<{ pose: Pose; from: number; top?: number; width?: number; x?: number }> = ({ pose, from, top = 260, width = 940, x = 540 }) => {
+  const frame = useCurrentFrame();
+  const a = ART[pose];
+  const s = useIn(from);
+  const l = (lvl(frame) + lvl(frame - 1) + lvl(frame - 2)) / 3; // a touch of smoothing so the bob isn't jittery
+  const open = !a.closed || MOUTH.open[frame] === "1";
+  const bob = -l * 16 + Math.sin(frame / 22) * 4;                // talk bounce + slow breathing
+  const tilt = Math.sin(frame / 5.5) * 1.6 * l + Math.sin(frame / 37) * 0.6;
+  const h = (width * a.h) / a.w;
+  const img = (n: string, vis: boolean) => (
+    <Img src={staticFile(`images/elevate-vsl/char/${n}.png`)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: vis ? 1 : 0 }} />
+  );
+  return (
+    <div style={{ position: "absolute", left: x - width / 2, top, width, height: h, transformOrigin: "50% 90%",
+      transform: `translateY(${bob + (1 - s) * 60}px) rotate(${tilt}deg) scale(${(0.94 + 0.06 * s) * (1 + l * 0.015)})`, opacity: s,
+      WebkitMaskImage: "linear-gradient(to bottom, #000 78%, transparent 99%)", maskImage: "linear-gradient(to bottom, #000 78%, transparent 99%)" }}>
+      {img(a.open, open)}
+      {a.closed ? img(a.closed, !open) : null}
+    </div>
+  );
+};
+
 // Default top keeps cards under the character's face (faces sit in the upper-middle of every scene).
 const Card: React.FC<{ from: number; top?: number; kicker?: string; children: React.ReactNode }> = ({ from, top = 900, kicker, children }) => {
   const s = useIn(from);
@@ -117,10 +153,10 @@ const Big: React.FC<{ from: number; children: React.ReactNode; size?: number; co
   return <div style={{ fontWeight: 800, fontSize: size, letterSpacing: -size * 0.04, lineHeight: 0.98, color, opacity: s, transform: `scale(${0.9 + 0.1 * s})`, transformOrigin: "left center" }}>{children}</div>;
 };
 
-const Hook: React.FC<{ lines: string[]; from: number; top?: number }> = ({ lines, from, top = 330 }) => {
+const Hook: React.FC<{ lines: string[]; from: number; top?: number }> = ({ lines, from, top = 110 }) => {
   const s = useIn(from);
   return (
-    <div style={{ position: "absolute", left: 520, right: 50, top, textAlign: "right", fontFamily: EL_FONT, opacity: s, transform: `translateX(${(1 - s) * 40}px)` }}>
+    <div style={{ position: "absolute", left: 60, right: 60, top, textAlign: "center", fontFamily: EL_FONT, opacity: s, transform: `translateY(${(1 - s) * -30}px)` }}>
       {lines.map((l, k) => (
         <div key={k} style={{ display: "inline-block", margin: "6px 8px", padding: "10px 24px", background: k === lines.length - 1 ? EL.red : EL.paper,
           color: k === lines.length - 1 ? "#fff" : EL.ink, fontWeight: 800, fontSize: 50, letterSpacing: -1.2, borderRadius: 10 }}>{l}</div>
@@ -154,7 +190,8 @@ export const ElevateVsl: React.FC = () => {
       {/* §1 hook: who it's for and the promise */}
       {show(0) && (
         <>
-          <Scene src="images/elevate-vsl/scene-2.webp" from={seg(0)[0]} to={seg(0)[1]} pos="30% center" />
+          <Ink />
+          <Talker pose="closeup" from={0} top={330} />
           <Hook from={0} lines={["Paying for ads?", "Calendar still", "has holes?"]} />
           <Chips items={[["Colorado", at(8)], ["tint", at(9)], ["flooring", at(10)], ["cleaning", at(11)], ["trades", at(13)]]} />
         </>
@@ -163,7 +200,8 @@ export const ElevateVsl: React.FC = () => {
       {/* §2 who it's for / not for */}
       {show(1) && (
         <>
-          <Scene src="images/elevate-vsl/scene-5.webp" from={seg(1)[0]} to={seg(1)[1]} />
+          <Ink />
+          {frame < at(97) ? <Talker pose="standing" from={at(54)} top={150} width={1250} /> : <Talker pose="closeup" from={at(97)} />}
           {frame < at(97) ? (
             <Card from={at(54)} kicker="Who this is for">
               <Row from={at(58)}>Already doing jobs</Row>
@@ -184,7 +222,8 @@ export const ElevateVsl: React.FC = () => {
       {/* §3 the real problem: follow-up, not ads */}
       {show(2) && (
         <>
-          <Scene src="images/elevate-vsl/scene-3.webp" from={seg(2)[0]} to={seg(2)[1]} />
+          <Ink />
+          {frame < at(152) ? <Talker pose="sitting" from={at(129)} top={170} width={1200} /> : <Talker pose="standing" from={at(152)} top={60} width={1250} />}
           {frame < at(152) ? (
             <Card from={at(136)} kicker="Most owners think">
               <Row from={at(141)} mark="cross" strike size={58}>An ad problem</Row>
@@ -256,7 +295,8 @@ export const ElevateVsl: React.FC = () => {
       {show(6) && (
         <>
           <Ink />
-          <Card from={at(350)} top={520} kicker="Every Monday · your scorecard">
+          <Talker pose="closeup" from={at(350)} top={200} />
+          <Card from={at(350)} top={880} kicker="Every Monday · your scorecard">
             <Row from={at(356)} mark="1">Leads</Row>
             <Row from={at(357)} mark="2">Booked jobs</Row>
             <Row from={at(359)} mark="3">Money booked</Row>
@@ -273,7 +313,8 @@ export const ElevateVsl: React.FC = () => {
       {/* §8 your part */}
       {show(7) && (
         <>
-          <Scene src="images/elevate-vsl/scene-3.webp" from={seg(7)[0]} to={seg(7)[1]} pos="70% center" />
+          <Ink />
+          <Talker pose="sitting" from={at(371)} top={170} width={1200} />
           <Card from={at(371)} kicker="Your part · two things">
             <Row from={at(376)} mark="1">Answer the jobs that book</Row>
             <Row from={at(382)} mark="2">Tell me what each one paid</Row>
@@ -307,7 +348,8 @@ export const ElevateVsl: React.FC = () => {
       {/* §11 the call + CTA */}
       {show(9) && (
         <>
-          <Scene src="images/elevate-vsl/scene-2.webp" from={seg(9)[0]} to={seg(9)[1]} pos="30% center" />
+          <Ink />
+          {frame < at(485) ? <Talker pose="closeup" from={at(457)} /> : <Talker pose="presenting" from={at(485)} top={180} width={620} x={560} />}
           {frame < at(485) ? (
             <Card from={at(457)} kicker="On the 15-minute call">
               <Row from={at(467)} mark="1">What's a job worth to you?</Row>
@@ -315,7 +357,7 @@ export const ElevateVsl: React.FC = () => {
               <Row from={at(481)} mark="3">Who answers the phone?</Row>
             </Card>
           ) : (
-            <div style={{ position: "absolute", left: 90, right: 90, top: 640, textAlign: "center", fontFamily: EL_FONT, opacity: cta, transform: `scale(${0.9 + 0.1 * cta})` }}>
+            <div style={{ position: "absolute", left: 90, right: 90, top: 1040, textAlign: "center", fontFamily: EL_FONT, opacity: cta, transform: `scale(${0.9 + 0.1 * cta})` }}>
               <div style={{ fontWeight: 800, fontSize: 56, color: EL.paper, textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>Straight answer on which plan fits.</div>
               <div style={{ display: "inline-block", marginTop: 34, background: EL.red, color: "#fff", fontWeight: 800, fontSize: 64, padding: "26px 50px", borderRadius: 16, boxShadow: "0 20px 50px rgba(245,47,57,0.45)" }}>
                 Book the 15-min call ↓

@@ -7,6 +7,7 @@ import { CardFanSample } from "./style-samples/CardFanSample";
 import { QuoteFrameSample } from "./style-samples/QuoteFrameSample";
 import { OrbitSample } from "./style-samples/OrbitSample";
 import { HairlineSample } from "./style-samples/HairlineSample";
+import { DataFlowSample } from "./style-samples/DataFlowSample";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="QuoteFrameSample" component={QuoteFrameSample} durationInFrames={120} fps={30} width={1080} height={1920} />
       <Composition id="OrbitSample" component={OrbitSample} durationInFrames={150} fps={30} width={1080} height={1920} />
       <Composition id="HairlineSample" component={HairlineSample} durationInFrames={240} fps={30} width={1080} height={1920} />
+      <Composition id="DataFlowSample" component={DataFlowSample} durationInFrames={180} fps={30} width={1080} height={1920} />
     </>
   );
 };

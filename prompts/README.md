@@ -23,3 +23,4 @@ reading.
 | `dot-pattern-1.md` | website, video | 2026-11-23 | Dot texture + framed quote; **demo has 4 `<h1>`s** (fix on sites); video `QuoteFrame` |
 | `orbiting-skills.md` | website, video | 2026-11-23 | **Use the fixed `orbiting-items.tsx`** (pasted one re-renders 60x/s, leaks its background, clips on phones); video `Orbit` |
 | `elevator.md` | website, video | 2026-11-23 | **Paste can't build** (missing files): use npm `@lucasmarkes/hairline`; video via `scripts/capture-hairline.mjs` (any of its 33 figures) |
+| `cpu-architecture.md` | website, video | 2026-11-23 | **Use the `.fixed` version** (pasted lines invisible on light sites, labels overflow); video `DataFlow` |

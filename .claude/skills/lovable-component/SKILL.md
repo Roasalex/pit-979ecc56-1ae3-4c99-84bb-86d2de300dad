@@ -35,6 +35,11 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - Theme colours that vanish on one theme (`text-muted` lines on a light site): look at it on the site's actual
+     theme, and on light and dark if the site has both.
+   - Fixed SVG ids (`id="cpu-mask-1"`, `id="gradient"`): duplicated when used twice. Suffix them with `useId()`.
+   - Text placed at a fixed x in an SVG: centre it (`textAnchor="middle"`) and fit it before swapping in real copy.
+   - The prompt's CSS file: prompts say `globals.css`; Lovable's is `src/styles.css`. Rename generic keyframes.
    - Relative imports to files that aren't in the paste (`./x-utils/engine`): it can't build. Read the comments for
      the source package and check npm (`npm view <pkg>`): installing the real package beats recreating its files.
      Inspect it first (licence, dependencies, install scripts, network calls) in a scratch folder.

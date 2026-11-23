@@ -15,7 +15,8 @@ to this project.
 | `public/sound pack/`, `public/music pack/` | The creator's sound effects and music. Use the original files; trim and level in code |
 | `brand/<brand>/BRAND.md` + `theme.tsx` | The creator's own brand sheet(s) (Elevate first). Where the skill says `brand/BRAND.md`, use this. None yet: offer to set one up before the first edit (skill: `references/brand-sheet.md`) |
 | `styles/<style>/STYLE.md` + `theme.tsx` | **Editing styles the creator wants copied**, measured from reels they like (not their brand). Borrow pacing, caption treatment, layouts and motifs; recolour in the creator's brand; never reuse the other creator's name, logo, tagline or CTA |
-| `src/style-samples/` | Sample-frame compositions (`StyleSamples-<Style>`) |
+| `src/style-samples/` | Sample-frame compositions (`StyleSamples-<Style>`, `RoadmapSample`) |
+| `src/shared/` | Reusable graphics ported from web components (e.g. `AnimatedRoadmap.tsx`); see the `lovable-component` skill for how to port one |
 | `src/<video>/` | One folder + one composition per video, registered in `src/Root.tsx` |
 | `hyperframes/` | One HyperFrames project per asset (skill: `references/hyperframes-hybrid.md`) |
 | `out/` | Finished mp4s and storyboard pages only |

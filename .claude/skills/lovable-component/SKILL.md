@@ -73,6 +73,12 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - File name matches the export (`animated-roadmap.tsx` for `AnimatedRoadmap`).
    - Demo copy is generic SaaS text: rewrite for the client's business **using only facts on their site**. No invented
      stats, guarantees or prices.
+   - **Testimonials and reviews: the client's real ones only,** word for word, named as the source shows them. Demo
+     reviews are invented people; shipping them (or any made-up review) breaks the FTC's 2024 fake-review rule.
+   - Repeated content (marquees, carousels that clone slides): screen readers should hear each item once
+     (`aria-hidden` on the clones) and the server HTML shouldn't multiply it. Check with `locator.ariaSnapshot()`.
+   - Shared shadcn files in the paste (`card`, `avatar`, `button`): the project has its own; don't overwrite them.
+   - CSS snippets that start with `@import "tailwindcss"`: add only the new rules to `src/styles.css`.
 4. **Send it to Lovable.** Lovable edits through its own agent: `send_message` with the fixed file contents, the exact
    path (`src/components/ui/<name>.tsx`), the dependency to add (`framer-motion`), where it goes on which page, and
    "don't change anything else". Use `plan_mode: true` first for anything bigger than one section. Each message

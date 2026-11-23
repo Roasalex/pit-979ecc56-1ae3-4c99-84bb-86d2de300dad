@@ -2,11 +2,12 @@
 // stay: filming the car, at the desk), captions on his words, and a graphic for
 // each script beat (brand/elevate: black cards, off-white type, one red accent). Every graphic only states what is said.
 // Cues hang off word indices (i) from words.ts, so they move with the words if the transcript is re-timed.
-import React from "react";
+import React, { createContext, useContext } from "react";
 import { AbsoluteFill, Audio, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { EL, EL_FONT } from "../../brand/elevate/theme";
 import { WORDS, type W } from "./words";
 import { DataFlow } from "../shared/DataFlow";
+import { DotPattern } from "../shared/DotPattern";
 import MOUTH from "./mouth.json"; // scripts/mouth_envelope.py on the voice-over: per-frame level + mouth open/shut
 
 const FPS = 30;
@@ -64,6 +65,8 @@ const Captions: React.FC<{ y: number }> = ({ y }) => {
 };
 
 // ---------------------------------------------------------------- building blocks
+/** Visuals-only cut (ElevateVslVisuals): no character and no scenes; cards move up to the middle of the frame. */
+const VO = createContext(false);
 const useIn = (from: number) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -73,6 +76,7 @@ const useIn = (from: number) => {
 /** 4:5 cartoon art in the 9:16 frame: blurred fill behind, art full width, slow push-in across the beat. */
 const Scene: React.FC<{ src: string; from: number; to: number; pos?: string }> = ({ src, from, to, pos = "center" }) => {
   const frame = useCurrentFrame();
+  if (useContext(VO)) return <Ink />;
   const z = interpolate(frame, [from, to], [1.0, 1.07], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <AbsoluteFill style={{ background: EL.ink, overflow: "hidden" }}>
@@ -84,9 +88,22 @@ const Scene: React.FC<{ src: string; from: number; to: number; pos?: string }> =
   );
 };
 
-const Ink: React.FC = () => (
-  <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 38%, #161616, ${EL.ink} 70%)` }} />
-);
+const Ink: React.FC = () => {
+  const vo = useContext(VO);
+  const frame = useCurrentFrame();
+  if (!vo) return <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 38%, #161616, ${EL.ink} 70%)` }} />;
+  // visuals-only: drifting dot grid + a red glow that breathes with the voice
+  const l = (lvl(frame) + lvl(frame - 1) + lvl(frame - 2) + lvl(frame - 3)) / 4;
+  return (
+    <AbsoluteFill style={{ background: EL.ink, overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: -60, transform: `translate(${(frame * 0.35) % 34}px, ${(frame * 0.2) % 34}px)` }}>
+        <DotPattern gap={34} dot={1.7} color="rgba(255,255,255,0.09)" />
+      </div>
+      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 42%, rgba(245,47,57,${0.1 + 0.12 * l}), transparent ${52 + 8 * l}%)` }} />
+      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 45%, transparent 45%, ${EL.ink} 95%)` }} />
+    </AbsoluteFill>
+  );
+};
 
 
 /** The cartoon character cut out on black. Mouth flaps with the voice (open/closed art pairs), and the body bobs and
@@ -102,6 +119,7 @@ const ART: Record<Pose, { open: string; closed?: string; w: number; h: number }>
 const lvl = (fr: number) => (MOUTH.level[Math.max(0, Math.min(MOUTH.level.length - 1, fr))] ?? 0) / 100;
 const Talker: React.FC<{ pose: Pose; from: number; top?: number; width?: number; x?: number }> = ({ pose, from, top = 260, width = 940, x = 540 }) => {
   const frame = useCurrentFrame();
+  const vo = useContext(VO);
   const a = ART[pose];
   const s = useIn(from);
   const l = (lvl(frame) + lvl(frame - 1) + lvl(frame - 2)) / 3; // a touch of smoothing so the bob isn't jittery
@@ -109,6 +127,7 @@ const Talker: React.FC<{ pose: Pose; from: number; top?: number; width?: number;
   const bob = -l * 16 + Math.sin(frame / 22) * 4;                // talk bounce + slow breathing
   const tilt = Math.sin(frame / 5.5) * 1.6 * l + Math.sin(frame / 37) * 0.6;
   const h = (width * a.h) / a.w;
+  if (vo) return null;
   const img = (n: string, vis: boolean) => (
     <Img src={staticFile(`images/elevate-vsl/char/${n}.png`)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: vis ? 1 : 0 }} />
   );
@@ -123,12 +142,14 @@ const Talker: React.FC<{ pose: Pose; from: number; top?: number; width?: number;
 };
 
 // Default top keeps cards under the character's face (faces sit in the upper-middle of every scene).
-const Card: React.FC<{ from: number; top?: number; kicker?: string; children: React.ReactNode }> = ({ from, top = 900, kicker, children }) => {
+const Card: React.FC<{ from: number; top?: number; kicker?: string; children: React.ReactNode }> = ({ from, top, kicker, children }) => {
   const s = useIn(from);
+  const vo = useContext(VO);
+  top = vo ? (top === undefined || top >= 800 ? 560 : top) : (top ?? 900);
   return (
     <div style={{ position: "absolute", left: 90, right: 90, top, background: "rgba(15,15,15,0.94)", borderTop: `6px solid ${EL.red}`, borderRadius: 18,
       padding: "36px 46px", fontFamily: EL_FONT, color: EL.paper, boxShadow: "0 30px 80px rgba(0,0,0,0.6)",
-      opacity: s, transform: `translateY(${(1 - s) * 40}px) scale(${0.96 + 0.04 * s})` }}>
+      opacity: s, transformOrigin: "50% 0%", transform: `translateY(${(1 - s) * 40}px) scale(${(0.96 + 0.04 * s) * (vo ? 1.1 : 1)})` }}>
       {kicker ? <div style={{ fontWeight: 700, fontSize: 28, letterSpacing: 6, textTransform: "uppercase", color: EL.grey, marginBottom: 18 }}>{kicker}</div> : null}
       {children}
     </div>
@@ -155,8 +176,10 @@ const Big: React.FC<{ from: number; children: React.ReactNode; size?: number; co
 
 const Hook: React.FC<{ lines: string[]; from: number; top?: number }> = ({ lines, from, top = 110 }) => {
   const s = useIn(from);
+  const vo = useContext(VO);
+  if (vo) top = 560;
   return (
-    <div style={{ position: "absolute", left: 60, right: 60, top, textAlign: "center", fontFamily: EL_FONT, opacity: s, transform: `translateY(${(1 - s) * -30}px)` }}>
+    <div style={{ position: "absolute", left: 60, right: 60, top, textAlign: "center", fontFamily: EL_FONT, opacity: s, transform: `translateY(${(1 - s) * -30}px) scale(${vo ? 1.18 : 1})` }}>
       {lines.map((l, k) => (
         <div key={k} style={{ display: "inline-block", margin: "6px 8px", padding: "10px 24px", background: k === lines.length - 1 ? EL.red : EL.paper,
           color: k === lines.length - 1 ? "#fff" : EL.ink, fontWeight: 800, fontSize: 50, letterSpacing: -1.2, borderRadius: 10 }}>{l}</div>
@@ -178,8 +201,34 @@ const Chip: React.FC<{ t: string; from: number }> = ({ t, from }) => {
 // ---------------------------------------------------------------- the ad
 const S = [0, 54, 129, 184, 269, 300, 350, 371, 390, 457].map((i) => at(i)); // section starts: §1-§8, §10, §11
 
-export const ElevateVsl: React.FC = () => {
+export const ElevateVsl: React.FC<{ visualsOnly?: boolean }> = ({ visualsOnly = false }) => (
+  <VO.Provider value={visualsOnly}>
+    <Ad />
+  </VO.Provider>
+);
+
+/** Big outlined section number above the card (visuals-only cut): fills the space the character used to. */
+const SectionMark: React.FC<{ n: number; from: number }> = ({ n, from }) => {
+  const s = useIn(from);
+  return (
+    <div style={{ position: "absolute", left: 90, top: 230, fontFamily: EL_FONT, opacity: s, transform: `translateX(${(1 - s) * -40}px)` }}>
+      <div style={{ fontWeight: 800, fontSize: 230, lineHeight: 1, letterSpacing: -10, color: "transparent", WebkitTextStroke: "3px rgba(245,243,240,0.55)" }}>{String(n).padStart(2, "0")}</div>
+      <div style={{ width: 120 * s, height: 8, background: EL.red, marginTop: 14 }} />
+    </div>
+  );
+};
+
+/** Thin red progress bar along the top (visuals-only cut). */
+const Progress: React.FC = () => {
   const frame = useCurrentFrame();
+  return <div style={{ position: "absolute", left: 0, top: 0, height: 10, width: (1080 * frame) / END, background: EL.red }} />;
+};
+
+const MARKED = [1, 2, 4, 5, 6, 7, 9]; // sections that get a number (the hook, the system and the plans have their own big graphic)
+
+const Ad: React.FC = () => {
+  const frame = useCurrentFrame();
+  const vo = useContext(VO);
   const seg = (k: number) => [S[k], k + 1 < S.length ? S[k + 1] : END] as const;
   const show = (k: number) => frame >= seg(k)[0] && frame < seg(k)[1];
   const cta = useIn(at(485));
@@ -357,7 +406,7 @@ export const ElevateVsl: React.FC = () => {
               <Row from={at(481)} mark="3">Who answers the phone?</Row>
             </Card>
           ) : (
-            <div style={{ position: "absolute", left: 90, right: 90, top: 1040, textAlign: "center", fontFamily: EL_FONT, opacity: cta, transform: `scale(${0.9 + 0.1 * cta})` }}>
+            <div style={{ position: "absolute", left: 90, right: 90, top: vo ? 720 : 1040, textAlign: "center", fontFamily: EL_FONT, opacity: cta, transform: `scale(${0.9 + 0.1 * cta})` }}>
               <div style={{ fontWeight: 800, fontSize: 56, color: EL.paper, textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>Straight answer on which plan fits.</div>
               <div style={{ display: "inline-block", marginTop: 34, background: EL.red, color: "#fff", fontWeight: 800, fontSize: 64, padding: "26px 50px", borderRadius: 16, boxShadow: "0 20px 50px rgba(245,47,57,0.45)" }}>
                 Book the 15-min call ↓
@@ -367,6 +416,8 @@ export const ElevateVsl: React.FC = () => {
         </>
       )}
 
+      {vo ? MARKED.map((k, n) => (show(k) ? <SectionMark key={k} n={n + 1} from={S[k]} /> : null)) : null}
+      {vo ? <Progress /> : null}
       <Captions y={1450} />
     </AbsoluteFill>
   );

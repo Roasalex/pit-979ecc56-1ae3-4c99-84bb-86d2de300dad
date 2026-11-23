@@ -10,6 +10,7 @@ import { HairlineSample } from "./style-samples/HairlineSample";
 import { DataFlowSample } from "./style-samples/DataFlowSample";
 import { StatCountSample } from "./style-samples/StatCountSample";
 import { AssembleTextSample } from "./style-samples/AssembleTextSample";
+import { WorksWheelSample } from "./style-samples/WorksWheelSample";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="DataFlowSample" component={DataFlowSample} durationInFrames={180} fps={30} width={1080} height={1920} />
       <Composition id="StatCountSample" component={StatCountSample} durationInFrames={120} fps={30} width={1080} height={1920} />
       <Composition id="AssembleTextSample" component={AssembleTextSample} durationInFrames={75} fps={30} width={1080} height={1920} />
+      <Composition id="WorksWheelSample" component={WorksWheelSample} durationInFrames={240} fps={30} width={1080} height={1920} />
     </>
   );
 };

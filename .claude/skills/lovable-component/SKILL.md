@@ -35,6 +35,10 @@ TanStack Start + Vite, React 19, TypeScript, **Tailwind v4**, shadcn (new-york).
    - Animations: respect reduced motion (`useReducedMotion()` from framer-motion) since the sites already disable CSS motion for it.
    - External images (third-party hotlinks like thiings.co) → the client's own images in the project, or remove. Don't invent stock
      URLs; if there's no image, make the prop optional and drop it.
+   - **Scroll traps.** `touch-action: pan-x`/`none` on anything big, `preventDefault` on wheel or touch events: test a
+     real swipe on a phone (CDP `Input.dispatchTouchEvent`) and the mouse wheel, and confirm the page still scrolls
+     past it to the contact form. A section a phone visitor can't get past costs every mobile lead.
+   - Animation loops that never stop (`requestAnimationFrame` re-requested unconditionally): let them sleep at rest.
    - Site-wide side effects from inside a section: smooth-scroll providers (`<ReactLenis root>`), global listeners,
      `document.body` styles. They change every page. Remove them; a site-wide choice belongs in the layout, and only
      if the user asks for it.

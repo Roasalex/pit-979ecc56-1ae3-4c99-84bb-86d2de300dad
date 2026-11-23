@@ -26,3 +26,4 @@ reading.
 | `cpu-architecture.md` | website, video | 2026-11-23 | **Use the `.fixed` version** (pasted lines invisible on light sites, labels overflow); video `DataFlow` |
 | `count-up.md` | website, video | 2026-11-23 | **Use the `.fixed` version** (pasted one doesn't finish on time, breaks decimals, hides the number from Google); video `StatCount` |
 | `text-scroll-animation.md` | video, website | 2026-11-23 | **Use the fixed `scroll-assemble.tsx`** (pasted one takes over the whole site's scrolling via Lenis); video `AssembleText` |
+| `works-wheel.md` | website, video | 2026-11-23 | **Use the `.fixed` version** (pasted one traps phone visitors: swipes don't scroll the page); video `WorksWheelVideo` |

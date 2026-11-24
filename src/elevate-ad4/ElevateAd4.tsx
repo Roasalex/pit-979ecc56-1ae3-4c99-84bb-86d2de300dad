@@ -308,7 +308,7 @@ const Ad: React.FC = () => {
   const cta = useIn(at(433));
   return (
     <AbsoluteFill style={{ background: EL.ink, fontFamily: EL_FONT }}>
-      <Audio src={staticFile("recordings/elevate-ad4.m4a")} />
+      <Audio src={staticFile("recordings/elevate-ad5.m4a")} />
 
       {/* §1 hook */}
       {show(0) && (

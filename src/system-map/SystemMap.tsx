@@ -6,7 +6,7 @@ import { AbsoluteFill, Audio, Easing, interpolate, spring, staticFile, useCurren
 import { EL_FONT } from "../../brand/elevate/theme";
 import { WORDS, type W } from "./words";
 
-const C = { bg: "#090909", box: "#151515", line: "#2A2A2A", gold: "#CFA54E", red: "#E5484D", green: "#3DBE7B", white: "#FFFFFF", grey: "#8A8A8A" };
+export const C = { bg: "#090909", box: "#151515", line: "#2A2A2A", gold: "#CFA54E", red: "#E5484D", green: "#3DBE7B", white: "#FFFFFF", grey: "#8A8A8A" };
 const FPS = 30;
 const f = (ms: number) => Math.round((ms / 1000) * FPS);
 const byI = new Map(WORDS.map((w) => [w.i, w]));
@@ -17,19 +17,19 @@ const at = (i: number) => {
 const END_CARD = at(400);
 export const SYSTEM_MAP_END = Math.max(END_CARD + 75, f(WORDS[WORDS.length - 1].endMs) + 30);
 
-const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-const ease = Easing.bezier(0.65, 0, 0.35, 1);
-const useIn = (from: number, damping = 15) => {
+export const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+export const ease = Easing.bezier(0.65, 0, 0.35, 1);
+export const useIn = (from: number, damping = 15) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   return spring({ frame: frame - from, fps, config: { damping, stiffness: 170 } });
 };
-const ramp = (frame: number, a: number, b: number) => interpolate(frame, [a, b], [0, 1], { ...clamp, easing: ease });
+export const ramp = (frame: number, a: number, b: number) => interpolate(frame, [a, b], [0, 1], { ...clamp, easing: ease });
 
 // ---------------------------------------------------------------- the map (world coordinates)
-type Box = { n: number; title: string; sub: string; x: number; y: number; w: number; h: number; at: number; green?: boolean };
-const BW = 520, BH = 150;
-const BOXES: Box[] = [
+export type Box = { n: number; title: string; sub: string; x: number; y: number; w: number; h: number; at: number; green?: boolean };
+export const BW = 520, BH = 150;
+export const BOXES: Box[] = [
   { n: 1, title: "AD", sub: "your phone clip, city + price", x: 360, y: 200, w: BW, h: BH, at: at(104) },
   { n: 2, title: "FORM", sub: "short, on their phone", x: 720, y: 480, w: BW, h: BH, at: at(127) },
   { n: 3, title: "TEXT BACK", sub: "under 60 seconds", x: 360, y: 760, w: BW, h: BH, at: at(137) },
@@ -40,8 +40,8 @@ const BOXES: Box[] = [
   { n: 8, title: "REVIEW ASK", sub: "after the job", x: 720, y: 2160, w: BW, h: BH, at: at(211) },
   { n: 9, title: "MONDAY SCORECARD", sub: "", x: 540, y: 2470, w: 660, h: 190, at: at(255) },
 ];
-const B = (n: number) => BOXES[n - 1];
-const MAP_CY = 1330;
+export const B = (n: number) => BOXES[n - 1];
+export const MAP_CY = 1330;
 
 // which box the voice is explaining (gold border + hand-drawn ellipse)
 const FOCUS: [number, number, number][] = [
@@ -101,13 +101,13 @@ const camAt = (frame: number): Cam => {
 };
 
 // ---------------------------------------------------------------- drawing helpers
-const arrowPath = (a: Box, b: Box) => {
+export const arrowPath = (a: Box, b: Box) => {
   const x1 = a.x, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y - b.h / 2 - 14;
   const my = (y1 + y2) / 2;
   return { d: `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`, ex: x2, ey: y2, angle: 90 };
 };
 /** Hand-drawn loop: slightly lumpy, overshoots its start like a marker circle. */
-const sketch = (cx: number, cy: number, rx: number, ry: number, seed: number) => {
+export const sketch = (cx: number, cy: number, rx: number, ry: number, seed: number) => {
   const pts: string[] = [];
   const a0 = -2.3 + seed * 0.3;
   for (let t = 0; t <= 1.0001; t += 1 / 90) {
@@ -118,7 +118,7 @@ const sketch = (cx: number, cy: number, rx: number, ry: number, seed: number) =>
   return "M " + pts.join(" L ");
 };
 
-const Arrow: React.FC<{ d: string; ex: number; ey: number; angle: number; start: number; color?: string; width?: number; gold: boolean }> = ({ d, ex, ey, angle, start, color = "#5a5a5a", width = 4, gold }) => {
+export const Arrow: React.FC<{ d: string; ex: number; ey: number; angle: number; start: number; color?: string; width?: number; gold: boolean }> = ({ d, ex, ey, angle, start, color = "#5a5a5a", width = 4, gold }) => {
   const frame = useCurrentFrame();
   const p = ramp(frame, start, start + 10);
   if (p <= 0) return null;
@@ -131,7 +131,7 @@ const Arrow: React.FC<{ d: string; ex: number; ey: number; angle: number; start:
   );
 };
 
-const BoxCard: React.FC<{ b: Box; frame: number; gold: boolean; children?: React.ReactNode }> = ({ b, frame, gold, children }) => {
+export const BoxCard: React.FC<{ b: Box; frame: number; gold: boolean; children?: React.ReactNode }> = ({ b, frame, gold, children }) => {
   const s = useIn(b.at, 13);
   if (frame < b.at) return null;
   const greenOn = b.green && frame >= b.at + (b.n === 5 ? 10 : 0);
@@ -149,7 +149,7 @@ const BoxCard: React.FC<{ b: Box; frame: number; gold: boolean; children?: React
 };
 
 /** A stamp that slams down at an angle with a little shake. */
-const Stamp: React.FC<{ at: number; color: string; angle?: number; size?: number; children: React.ReactNode; style?: React.CSSProperties }> = ({ at: t, color, angle = -8, size = 54, children, style }) => {
+export const Stamp: React.FC<{ at: number; color: string; angle?: number; size?: number; children: React.ReactNode; style?: React.CSSProperties }> = ({ at: t, color, angle = -8, size = 54, children, style }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   if (frame < t) return null;
@@ -413,7 +413,7 @@ const Check: React.FC<{ at: number; children: React.ReactNode }> = ({ at: t, chi
   );
 };
 
-const LeadsButton: React.FC<{ from: number; leaveAt?: number; top: number }> = ({ from, leaveAt, top }) => {
+export const LeadsButton: React.FC<{ from: number; leaveAt?: number; top: number }> = ({ from, leaveAt, top }) => {
   const frame = useCurrentFrame();
   const s = useIn(from, 12);
   const away = leaveAt ? ramp(frame, leaveAt, leaveAt + 14) : 0;

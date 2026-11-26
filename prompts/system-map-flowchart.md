@@ -69,3 +69,25 @@ SHOT LIST - DAY 1 (follow the voice, in this order)
 
 Also (same message): go to GitHub and learn more video-editing skills, styles, pop-up text messages and animated text/effects
 to add to videos. → `.claude/skills/remotion-reel/references/animation-toolkit.md`
+
+---
+
+## Day 2 shot list (added 2026-11-26)
+
+- **Used in:** `src/system-map-day2/` (compositions `SystemMapDay2`, `SystemMapDay2Fast` = 1.12x voice), stick-figure poses
+  from the creator's sheet in `public/images/stick/` (shrug, thumb, idea, point-left, point-right, hand-down).
+- **Notes when used:** the voice ends "send me the word **lead**" (no s) while the button says DM "LEADS". Captions hide while
+  the text bubble types the same words. The creator asked for two speeds; atempo 1.12 keeps the pitch.
+
+SHOT LIST - DAY 2
+1. "Most owners think they need better leads" - The whole map, small and gray. Headline: BETTER LEADS? A red X lands on the headline at "They don't."
+2. "eleven... on a job... six" - A three-step timeline draws left to right: 11:00 AM FORM FILLED / 11:05 ON A JOB / 6:00 PM THEY BOOKED SOMEONE ELSE.
+3. "The lead wasn't bad. It was late." - Card, big: THE LEAD WASN'T BAD. IT WAS LATE.
+4. "Here's the fix" - The map comes back. Camera pushes in on box 3. It turns gold, the circle draws.
+5. "Under sixty seconds" - The 60-second timer ring runs down. Headline: UNDER 60 SECONDS.
+6. "Hey Mike..." - A text bubble types out the line word by word. No phone number.
+7. "You never touched your phone" - A small phone icon, face down, with a gold check next to it.
+8. End card.
+
+Also (same message): "The voice might be a little too slow. If you can speed it up but make it sound good, if not, it's
+fine. Just give me two versions of it, and make sure to double-check your work before giving it to me."

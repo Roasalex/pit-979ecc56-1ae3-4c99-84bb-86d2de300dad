@@ -16,6 +16,7 @@ import { SegmentMeterSample } from "./style-samples/SegmentMeterSample";
 import { ElevateSamples } from "./style-samples/ElevateSamples";
 import { ElevateVsl, END as ELEVATE_VSL_END } from "./elevate-vsl/ElevateVsl";
 import { ElevateAd4, END as ELEVATE_AD4_END } from "./elevate-ad4/ElevateAd4";
+import { SystemMap, SYSTEM_MAP_END } from "./system-map/SystemMap";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -40,6 +41,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="ElevateVslVisuals" component={ElevateVsl} defaultProps={{ visualsOnly: true }} durationInFrames={ELEVATE_VSL_END} fps={30} width={1080} height={1920} />
       <Composition id="ElevateAd4" component={ElevateAd4} durationInFrames={ELEVATE_AD4_END} fps={30} width={1080} height={1920} />
       <Composition id="ElevateAd4Visuals" component={ElevateAd4} defaultProps={{ visualsOnly: true }} durationInFrames={ELEVATE_AD4_END} fps={30} width={1080} height={1920} />
+      <Composition id="SystemMap" component={SystemMap} durationInFrames={SYSTEM_MAP_END} fps={30} width={1080} height={1920} />
     </>
   );
 };

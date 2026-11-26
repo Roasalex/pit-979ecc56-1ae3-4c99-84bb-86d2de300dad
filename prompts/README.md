@@ -29,3 +29,4 @@ reading.
 | `works-wheel.md` | website, video | 2026-11-23 | **Use the `.fixed` version** (pasted one traps phone visitors: swipes don't scroll the page); video `WorksWheelVideo` |
 | `3d-testimonials.md` | website, video | 2026-11-23 | **Real reviews only** (demo reviews are invented; FTC 2024 rule). Use fixed `testimonials-wall.tsx`; video `ReviewWall` |
 | `energy-meter.md` | video, portal | 2026-11-23 | **Never paste its CSS** (replaces the site's theme). Use `.fixed` (pasted one shows a stale number); video `SegmentMeter` |
+| `system-map-flowchart.md` | video | 2026-11-26 | One animated 9-box flowchart + virtual camera, voice-over only; gold/red/green palette is this video's own (not the Elevate red brand) |

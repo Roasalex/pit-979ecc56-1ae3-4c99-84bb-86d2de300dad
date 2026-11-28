@@ -38,6 +38,9 @@ node scripts/transcribe.mjs public/recordings/<video>.mp4
   (4K stays 4K so punch-ins stay sharp). Several takes are joined in the order given.
 - `--min-silence 0.1` is the default. If the result feels breathless or clips word endings, raise
   `--pad` (0.08) or `--min-silence` (0.2) and say so; if it leaves pauses in, the room is noisy: try `--noise -30dB`.
+- **AI voice-overs** (the creator's voice clone, `hf_*.mp3`): only trim pauses over 0.4s (`--min-silence 0.4 --pad 0.12`)
+  and use `--noise=-45dB`: the default -35dB floor treats quiet words ("you", "lead") as silence and cuts them. After
+  every cut, transcribe the raw file and the cut and diff the words; they must match before anything is anchored.
 - `<video>.cuts.json` → `joinFrames` lists every jump cut on the new timeline. Use them as the take's
   cuts in the skill's step 3 (scene detection misses jump cuts on the same framing), and punch in on them.
 - Retakes: read the transcript for repeated sentences or false starts, tell the creator which ones you'd

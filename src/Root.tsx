@@ -18,6 +18,7 @@ import { ElevateVsl, END as ELEVATE_VSL_END } from "./elevate-vsl/ElevateVsl";
 import { ElevateAd4, END as ELEVATE_AD4_END } from "./elevate-ad4/ElevateAd4";
 import { SystemMap, SYSTEM_MAP_END } from "./system-map/SystemMap";
 import { SystemMapDay2, DAY2_END, DAY2_FAST_END } from "./system-map-day2/SystemMapDay2";
+import { SystemMapDay3, DAY3_END, DAY3_FAST_END, DAY3_FASTER_END } from "./system-map-day3/SystemMapDay3";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -45,6 +46,9 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="SystemMap" component={SystemMap} durationInFrames={SYSTEM_MAP_END} fps={30} width={1080} height={1920} />
       <Composition id="SystemMapDay2" component={SystemMapDay2} durationInFrames={DAY2_END} fps={30} width={1080} height={1920} />
       <Composition id="SystemMapDay2Fast" component={SystemMapDay2} defaultProps={{ fast: true }} durationInFrames={DAY2_FAST_END} fps={30} width={1080} height={1920} />
+      <Composition id="SystemMapDay3" component={SystemMapDay3} durationInFrames={DAY3_END} fps={30} width={1080} height={1920} />
+      <Composition id="SystemMapDay3Fast" component={SystemMapDay3} defaultProps={{ speed: "fast" as const }} durationInFrames={DAY3_FAST_END} fps={30} width={1080} height={1920} />
+      <Composition id="SystemMapDay3Faster" component={SystemMapDay3} defaultProps={{ speed: "faster" as const }} durationInFrames={DAY3_FASTER_END} fps={30} width={1080} height={1920} />
     </>
   );
 };

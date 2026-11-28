@@ -91,3 +91,20 @@ SHOT LIST - DAY 2
 
 Also (same message): "The voice might be a little too slow. If you can speed it up but make it sound good, if not, it's
 fine. Just give me two versions of it, and make sure to double-check your work before giving it to me."
+
+---
+
+## Day 3 shot list (added 2026-11-28)
+
+- **Used in:** `src/system-map-day3/` (compositions `SystemMapDay3Fast` = 1.12x, `SystemMapDay3Faster` = 1.2x; `SystemMapDay3`
+  is the trimmed voice at normal speed). The creator asked for the voice faster ("it sounded too slow").
+- **Notes when used:** the first cut at -35dB dropped "You" and "lead"; recut at -45dB and diffed word-for-word against the
+  raw file (CLAUDE.md now says to). At 1.2x the transcriber mishears "paid" and "texts", so 1.2x is about the limit.
+
+1. "You paid for that lead. Then you talked to it once." - One lead icon. A single text bubble goes out. Then nothing. Headline: ONE TOUCH. Red X.
+2. "They got busy. At work. Forgot." - Three small gray tags float up around the lead icon: BUSY / AT WORK / FORGOT.
+3. "the system keeps going for you" - The map appears. Push in on box 4, gold circle.
+4. "day one... day three... day seven" - Three dots light one by one under box 4, each sending a small text bubble: DAY 1, DAY 3, DAY 7.
+5. "first text gets the ready... second and third get the busy" - Split: left label READY with 1 bubble, right label BUSY with 2 bubbles. The arrow from box 4 to box 5 turns gold and box 5 turns green.
+6. "leaving them on the table" - A small stack of lead icons slides off the edge of the screen. Red stamp: PAID FOR. NEVER WORKED.
+7. End card.
